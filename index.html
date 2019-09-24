@@ -1,0 +1,82 @@
+<html>
+<head>
+<style>
+/* Add your css styles here */
+
+body{
+    padding:10px;
+}
+
+
+.note-item, #addnote{
+    padding:10px;
+    border:1px solid grey;
+    margin:5px;
+    border-radius:5px;
+    width:350px;
+}
+</style>
+</head>
+<body>
+<div id="addnote">
+    <input type="text" id="noteText"/> <button onclick="NOTES.addNote()"> Add Note </button>
+</div>
+<div id="noteList">
+   
+</div>
+<script>
+// Add your javascript here
+
+const NOTES = (function(){
+
+    const textbox = document.getElementById("noteText");
+    const noteList = document.getElementById("noteList");
+    let data = [];
+    
+    function render(){
+        noteList.innerHTML = "";
+            for(let index in data){
+            const item = data[index]
+            const container = document.createElement("div");
+                container.className ="note-item";
+                container.style.backgroundColor = item.color;
+           let template = `<span>`+item.text+`</span> 
+<button onclick="NOTES.editNote(`+index+`)">Edit</button>
+<button onclick="NOTES.deleteNote(`+index+`)">Delete</button> 
+<input type="color" onchange="NOTES.changeColor(`+index+`)"/>`;
+            container.innerHTML = template;
+            noteList.append(container);
+            }
+    }
+    
+    return {
+        addNote:function(){
+            if(textbox.value){
+             data.push({text:textbox.value, color:"grey"});
+             render();
+                textbox.value = "";
+                textbox.focus();
+            }
+        },
+        editNote:function(id){
+            const editData = prompt("Edit Note");
+            if(editData){
+            data[id].text = editData;
+            render();
+            }
+        },
+        changeColor:function(index){
+            data[index].color=event.currentTarget.value;
+            event.currentTarget.parentElement.style.backgroundColor=event.currentTarget.value;
+        },
+        deleteNote:function(index){
+            data.splice(index,1);
+            render();
+        }
+    }
+    
+})()
+
+</script>
+</body>
+</html>
